@@ -70,6 +70,15 @@ function init() {
     complete: addPoints,
   });
   
+  //Creating custom icon
+  var myNewIcon = L.icon({
+    iconUrl: 'LocationCustomIcon.png',
+
+    iconSize:     [38, 95], // size of the icon
+    iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+    popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+  });
+  
   
   //Adding Location Found Marker with enother graph
   map.locate({
@@ -78,7 +87,7 @@ function init() {
         watch:true,
         enableHighAccuracy:true
       }).on("locationfound", e => {
-		  locationMarker = new L.marker(e.latlng).addTo(map);
+		  locationMarker = new L.marker(e.latlng, {icon: myNewIcon}).addTo(map);
 	  }).on("locationerror", error => {
           if (locationMarker) {
               map.removeLayer(locationMarker);
