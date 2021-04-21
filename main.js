@@ -65,16 +65,16 @@ function init() {
 
   // Use PapaParse to load data from Google Sheets
   // And call the respective functions to add those to the map.
-  Papa.parse(geomURL, {
-    download: true,
-    header: true,
-    complete: addGeoms,
-  });
-  Papa.parse(pointsURL, {
-    download: true,
-    header: true,
-    complete: addPoints,
-  });
+  //Papa.parse(geomURL, {
+    //download: true,
+    //header: true,
+    //complete: addGeoms,
+  //});
+  //Papa.parse(pointsURL, {
+    //download: true,
+    //header: true,
+    //complete: addPoints,
+  //});
   
   //Creating custom icon
   var myNewIcon = L.icon({
