@@ -97,7 +97,6 @@ function init() {
 		  //Creating an imaginary circle around the user location to be used for location awareness using accuracy
 			locationRadius = e.accuracy;
 			locationCircle = L.circle(e.latlng, locationRadius).addTo(map);
-			console.log(locationMarker);
 	  }).on("locationerror", error => {
           if (locationMarker) {
               map.removeLayer(locationMarker);
@@ -206,7 +205,7 @@ function addPoints(data) {
       marker = L.marker([data[row].lat, data[row].lon]);
     }
 	// Location awareness
-	if (marker.distanceTo(locationMarker)<locationRadius){
+	if (marker.distanceTo(locationMarker) < locationRadius){
 		
 		marker.addTo(pointGroupLayer);
 		
