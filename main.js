@@ -205,7 +205,7 @@ function addPoints(data) {
       marker = L.marker([data[row].lat, data[row].lon]);
     }
 	// Location awareness
-	if (marker.distanceTo(locationMarker) < locationRadius){
+	if (marker.getLatLng().distanceTo(locationMarker.getLatLng()) < locationRadius){
 		
 		marker.addTo(pointGroupLayer);
 		
