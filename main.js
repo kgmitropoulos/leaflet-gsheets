@@ -19,12 +19,18 @@ let map;
 let sidebar;
 let panelID = "my-info-panel";
 
+//Variables for location awareness
+let locationMarker;
+let locationRadius;
+let locationCircle;
+
 /*
  * init() is called when the page has loaded
  */
 function init() {
   // Create a new Leaflet map centered on the continental US
   map = L.map("map").setView([51.5, -0.1], 14);
+  
 
   // This is the Carto Positron basemap
   L.tileLayer(
@@ -88,12 +94,21 @@ function init() {
         enableHighAccuracy:true
       }).on("locationfound", e => {
 		  locationMarker = new L.marker(e.latlng, {icon: myNewIcon}).addTo(map);
+		  //Creating an imaginary circle around the user location to be used for location awareness using accuracy
+			locationRadius = e.accuracy;
+			locationCircle = L.circle(e.latlng, locationRadius).addTo(map);
+			console.log(locationMarker);
 	  }).on("locationerror", error => {
           if (locationMarker) {
               map.removeLayer(locationMarker);
               locationMarker = undefined;
           }
+		  
+	
   });
+  
+  
+  
   
 }
 
@@ -176,7 +191,7 @@ function addPoints(data) {
   // Wil be in pixels for circleMarker, metres for circle
   // Ignore for point
   let markerRadius = 100;
-
+	
   for (let row = 0; row < data.length; row++) {
     let marker;
     if (markerType == "circleMarker") {
@@ -190,41 +205,47 @@ function addPoints(data) {
     } else {
       marker = L.marker([data[row].lat, data[row].lon]);
     }
-    marker.addTo(pointGroupLayer);
+	// Location awareness
+	if (marker.distanceTo(locationMarker)<locationRadius){
+		
+		marker.addTo(pointGroupLayer);
+		
+		// UNCOMMENT THIS LINE TO USE POPUPS
+		//marker.bindPopup('<h2>' + data[row].name + '</h2>There's a ' + data[row].description + ' here');
 
-    // UNCOMMENT THIS LINE TO USE POPUPS
-    //marker.bindPopup('<h2>' + data[row].name + '</h2>There's a ' + data[row].description + ' here');
+		// COMMENT THE NEXT GROUP OF LINES TO DISABLE SIDEBAR FOR THE MARKERS
+		marker.feature = {
+		  properties: {
+			name: data[row].name,
+			description: data[row].description,
+		  },
+		};
+		marker.on({
+		  click: function (e) {
+			L.DomEvent.stopPropagation(e);
+			document.getElementById("sidebar-title").innerHTML =
+			  e.target.feature.properties.name;
+			document.getElementById("sidebar-content").innerHTML =
+			  e.target.feature.properties.description;
+			sidebar.open(panelID);
+		  },
+		});
+		// COMMENT UNTIL HERE TO DISABLE SIDEBAR FOR THE MARKERS
 
-    // COMMENT THE NEXT GROUP OF LINES TO DISABLE SIDEBAR FOR THE MARKERS
-    marker.feature = {
-      properties: {
-        name: data[row].name,
-        description: data[row].description,
-      },
-    };
-    marker.on({
-      click: function (e) {
-        L.DomEvent.stopPropagation(e);
-        document.getElementById("sidebar-title").innerHTML =
-          e.target.feature.properties.name;
-        document.getElementById("sidebar-content").innerHTML =
-          e.target.feature.properties.description;
-        sidebar.open(panelID);
-      },
-    });
-    // COMMENT UNTIL HERE TO DISABLE SIDEBAR FOR THE MARKERS
-
-    // AwesomeMarkers is used to create fancier icons
-    let icon = L.AwesomeMarkers.icon({
-      icon: "info-circle",
-      iconColor: "white",
-      markerColor: data[row].color,
-      prefix: "fa",
-      extraClasses: "fa-rotate-0",
-    });
-    if (!markerType.includes("circle")) {
-      marker.setIcon(icon);
-    }
+		// AwesomeMarkers is used to create fancier icons
+		let icon = L.AwesomeMarkers.icon({
+		  icon: "info-circle",
+		  iconColor: "white",
+		  markerColor: data[row].color,
+		  prefix: "fa",
+		  extraClasses: "fa-rotate-0",
+		});
+		if (!markerType.includes("circle")) {
+		  marker.setIcon(icon);
+		}
+	
+	// Location awareness
+	}
   }
 }
 
