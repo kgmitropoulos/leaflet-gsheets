@@ -70,11 +70,11 @@ function init() {
     header: true,
     complete: addGeoms,
   });
-  Papa.parse(pointsURL, {
-    download: true,
-    header: true,
-    complete: addPoints,
-  });
+  //Papa.parse(pointsURL, {
+    //download: true,
+    //header: true,
+    //complete: addPoints,
+  //});
   
   //Creating custom icon
   var myNewIcon = L.icon({
