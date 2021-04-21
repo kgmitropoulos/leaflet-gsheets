@@ -19,7 +19,7 @@ let map;
 let sidebar;
 let panelID = "my-info-panel";
 
-//Variables for location awareness
+//Variables for adding location awareness
 let locationMarker;
 let locationRadius;
 let locationCircle;
@@ -204,7 +204,7 @@ function addPoints(data) {
     } else {
       marker = L.marker([data[row].lat, data[row].lon]);
     }
-	// Location awareness
+	// Location awareness added
 	if (marker.getLatLng().distanceTo(locationMarker.getLatLng()) < locationRadius){
 		
 		marker.addTo(pointGroupLayer);
@@ -243,7 +243,7 @@ function addPoints(data) {
 		  marker.setIcon(icon);
 		}
 	
-	// Location awareness
+	// Location awareness added
 	}
   }
 }
